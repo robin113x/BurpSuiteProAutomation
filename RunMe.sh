@@ -68,6 +68,7 @@ download_burp_suite() {
 check_and_install_java() {
   java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
   if [[ "$java_version" < "21" ]]; then
+    sudo apt update -y && udo apt install openjdk-22-jdk -y
     echo "Java version is less than 21, installing the latest Java version..."
     sudo apt-get install -y fonts-dejavu  # Ensure dependency is installed
     curl -L -o openlogic.deb https://builds.openlogic.com/downloadJDK/openlogic-openjdk/22.0.2+9/openlogic-openjdk-22.0.2+9-linux-x64-deb.deb
@@ -89,7 +90,7 @@ run_burp_suite() {
 
   # Run Burp Suite Pro in the current terminal
   echo "Starting Burp Suite Pro in the current terminal..."
-  /usr/lib/jvm/openlogic-openjdk-22-hotspot-amd64/bin/java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:burploader.jar -noverify -jar burpsuite_pro.jar > /dev/null
+  /bin/java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:burploader.jar -noverify -jar burpsuite_pro.jar > /dev/null
 
   echo "Burp Suite Pro is now running in the current terminal."
 }
@@ -99,7 +100,7 @@ run_from_anywhere() {
   shell=$(echo $0)
   echo "#!/bin/bash" > burp
   echo "cd $curr_dir" >> burp
-  echo "  /usr/lib/jvm/openlogic-openjdk-22-hotspot-amd64/bin/java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:burploader.jar -noverify -jar burpsuite_pro.jar > /dev/null" >> burp
+  echo "  /bin/java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:burploader.jar -noverify -jar burpsuite_pro.jar > /dev/null" >> burp
   sudo chmod 777 burp
   sudo mv burp /bin/
   clear
