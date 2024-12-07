@@ -38,7 +38,7 @@ install_git_if_needed() {
 fetch_latest_version() {
   echo "Fetching the latest Burp Suite Pro version..."
   curl -s https://portswigger.net/burp/releases#professional > Version.txt
-  cat Version.txt | grep 'professional-community' | head -n 1 > latest_version.txt
+  cat Version.txt | grep 'professional-community' | head -n 4 | tail -n 1 > latest_version.txt
   LATEST_VERSION=$(cat latest_version.txt | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}')
   modified=$(echo "$LATEST_VERSION" | sed 's/-/./g')
   echo "Latest version: $modified"
