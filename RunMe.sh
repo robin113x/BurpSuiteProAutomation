@@ -1,27 +1,26 @@
-#!/bin/bash
-
-# Author: robin113x
-
-# ASCII art for the beginning of the script
-echo "==================================="
-echo "   ____              ____        __ "
-echo "  / __ )____  ____  / __ )____  / /_"
-echo " / __  / __ \/ __ \/ __  / __ \/ __/"
-echo "/ /_/ / /_/ / /_/ / /_/ / /_/ / /_  "
-echo "/_____/\____/\____/_____/\____/\__/  "
-echo "=================================== "
-echo "============ROBIN H00D============= "
-echo "=================================== "
-
+#!/bin/bash 
+# Author: robin113x 
+# Colorized ASCII art for the beginning of the script 
+echo -e "\e[1;31m===================================\e[0m" 
+echo -e "\e[1;32m ____ ____ __ \e[0m" 
+echo -e "\e[1;33m / __ )____ ____ / __ )____ / /_\e[0m" 
+echo -e "\e[1;34m / __ / __ \/ __ \/ __ / __ \/ __/\e[0m" 
+echo -e "\e[1;35m/ /_/ / /_/ / /_/ / /_/ / /_/ / /_ \e[0m" 
+echo -e "\e[1;36m/_____/\____/\____/_____/\____/\__/ \e[0m" 
+echo -e "\e[1;31m=================================== \e[0m" 
+echo -e "\e[1;32m============ROBIN H00D============= \e[0m" 
+echo -e "\e[1;31m=================================== \e[0m" 
 # Global variables
 LATEST_VERSION=""
 modified=""
+curr_dir=""
 
 # Function to clone the repository
 clone_repo() {
   echo "Cloning the repository..."
   git clone https://github.com/robin113x/Burp-Suite.git
   cd Burp-Suite
+  curr_dir=$(pwd)
   ls
 }
 
@@ -47,16 +46,20 @@ fetch_latest_version() {
 
 # Function to download Burp Suite Pro
 download_burp_suite() {
-  echo "Downloading Burp Suite Pro version $modified..."
-  DOWNLOAD_URL="https://portswigger-cdn.net/burp/releases/download?product=pro&version=${modified}&type=Jar"
-  echo $DOWNLOAD_URL
-  curl -L -o "burpsuite_pro.jar" "$DOWNLOAD_URL"
-
   if [ -f "burpsuite_pro.jar" ]; then
-    echo "Download complete: burpsuite_pro.jar"
+    echo "burpsuite_pro.jar already exists. Skipping download."
   else
-    echo "Download failed. Please check the URL and your network connection."
-    exit 1
+    echo "Downloading Burp Suite Pro version $modified..."
+    DOWNLOAD_URL="https://portswigger-cdn.net/burp/releases/download?product=pro&version=${modified}&type=Jar"
+    echo $DOWNLOAD_URL
+    curl -L -o "burpsuite_pro.jar" "$DOWNLOAD_URL"
+
+    if [ -f "burpsuite_pro.jar" ]; then
+      echo "Download complete: burpsuite_pro.jar"
+    else
+      echo "Download failed. Please check the URL and your network connection."
+      exit 1
+    fi
   fi
   sudo chmod 777 *
 }
@@ -66,22 +69,18 @@ check_and_install_java() {
   java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
   if [[ "$java_version" < "21" ]]; then
     echo "Java version is less than 21, installing the latest Java version..."
-    curl -L -o openjdk.deb https://builds.openlogic.com/downloadJDK/openlogic-openjdk/22.0.2+9/openlogic-openjdk-22.0.2+9-linux-x64-deb.deb
-    sudo dpkg -i openjdk.deb
+    sudo apt-get install -y fonts-dejavu  # Ensure dependency is installed
+    curl -L -o openlogic.deb https://builds.openlogic.com/downloadJDK/openlogic-openjdk/22.0.2+9/openlogic-openjdk-22.0.2+9-linux-x64-deb.deb
+    sudo dpkg -i openlogic.deb
+
+    # Find the line number for the 22 version and automatically select it
+    #update-alternatives --config java 
+    sudo update-alternatives --config java
   else
     echo "Java version 21.0.x or higher is already installed. Good to go!"
   fi
 }
 
-# Function to install xterm if not already installed
-install_xterm_if_needed() {
-  if ! command -v xterm &> /dev/null; then
-    echo "xterm not found, installing it..."
-    sudo apt-get install -y xterm
-  else
-    echo "xterm is already installed."
-  fi
-}
 
 # Function to run keygen and Burp Suite Pro
 run_burp_suite() {
@@ -90,9 +89,21 @@ run_burp_suite() {
 
   # Run Burp Suite Pro in the current terminal
   echo "Starting Burp Suite Pro in the current terminal..."
-  /usr/lib/jvm/jdk-21.0.5-oracle-x64/bin/java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:burploader.jar -noverify -jar burpsuite_pro.jar
+  /usr/lib/jvm/openlogic-openjdk-22-hotspot-amd64/bin/java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:burploader.jar -noverify -jar burpsuite_pro.jar > /dev/null
 
   echo "Burp Suite Pro is now running in the current terminal."
+}
+
+# Function to create a script to run Burp Suite from anywhere
+run_from_anywhere() {
+  shell=$(echo $0)
+  echo "#!/bin/bash" > burp
+  echo "cd $curr_dir" >> burp
+  echo "  /usr/lib/jvm/openlogic-openjdk-22-hotspot-amd64/bin/java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:burploader.jar -noverify -jar burpsuite_pro.jar > /dev/null" >> burp
+  sudo chmod 777 burp
+  sudo mv burp /bin/
+  clear
+  
 }
 
 # Main script execution
@@ -101,5 +112,13 @@ clone_repo
 fetch_latest_version
 download_burp_suite
 check_and_install_java
-install_xterm_if_needed
 run_burp_suite
+run_from_anywhere
+
+# Here, the user will choose the Java version to be used
+# Prompt the user to select version 22 for Java
+clear
+echo "Remember to select version 22 when prompted!"
+sudo update-alternatives --config java
+clear
+echo "Type 'burp' in the terminal to run"
