@@ -18,8 +18,8 @@ curr_dir=""
 # Function to clone the repository
 clone_repo() {
   echo "Cloning the repository..."
-  git clone https://github.com/robin113x/Burp-Suite.git
-  cd Burp-Suite
+  git clone https://github.com/robin113x/BurpSuitePro.git
+  cd BurpSuitePro
   curr_dir=$(pwd)
   ls
 }
