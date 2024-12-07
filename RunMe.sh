@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Author: robin113x
+
 # ASCII art for the beginning of the script
 echo "==================================="
 echo "   ____              ____        __ "
@@ -7,7 +9,13 @@ echo "  / __ )____  ____  / __ )____  / /_"
 echo " / __  / __ \/ __ \/ __  / __ \/ __/"
 echo "/ /_/ / /_/ / /_/ / /_/ / /_/ / /_  "
 echo "/_____/\____/\____/_____/\____/\__/  "
-echo "==================================="
+echo "=================================== "
+echo "============ROBIN H00D============= "
+echo "=================================== "
+
+# Global variables
+LATEST_VERSION=""
+modified=""
 
 # Function to clone the repository
 clone_repo() {
@@ -15,6 +23,16 @@ clone_repo() {
   git clone https://github.com/robin113x/Burp-Suite.git
   cd Burp-Suite
   ls
+}
+
+# Function to install Git if not found
+install_git_if_needed() {
+  if ! command -v git &> /dev/null; then
+    echo "Git not found, installing it..."
+    sudo apt-get install -y git
+  else
+    echo "Git is already installed."
+  fi
 }
 
 # Function to fetch the latest Burp Suite Pro version
@@ -43,14 +61,15 @@ download_burp_suite() {
   sudo chmod 777 *
 }
 
-# Function to check and install the latest Java version if not present
-install_java_if_needed() {
-  if ! java -version 2>&1 | grep -q "openjdk"; then
-    echo "Installing the latest Java version..."
+# Function to check if Java version is less than 21.x.x and install if needed
+check_and_install_java() {
+  java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
+  if [[ "$java_version" < "21" ]]; then
+    echo "Java version is less than 21, installing the latest Java version..."
     curl -L -o openjdk.deb https://builds.openlogic.com/downloadJDK/openlogic-openjdk/22.0.2+9/openlogic-openjdk-22.0.2+9-linux-x64-deb.deb
     sudo dpkg -i openjdk.deb
   else
-    echo "Java version 21.0.x is already installed. Good to go!"
+    echo "Java version 21.0.x or higher is already installed. Good to go!"
   fi
 }
 
@@ -77,9 +96,10 @@ run_burp_suite() {
 }
 
 # Main script execution
+install_git_if_needed
 clone_repo
 fetch_latest_version
 download_burp_suite
-install_java_if_needed
+check_and_install_java
 install_xterm_if_needed
 run_burp_suite
