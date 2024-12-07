@@ -1,4 +1,6 @@
 # Burp Suite Pro Automation Script
+![image](https://github.com/user-attachments/assets/00f296d0-367d-41e7-9190-3268e3b141ca)
+
 
 This script automates the installation and setup of Burp Suite Pro, ensuring the necessary dependencies are in place and providing a convenient way to run Burp Suite from anywhere.
 
