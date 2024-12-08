@@ -68,19 +68,22 @@ download_burp_suite() {
 check_and_install_java() {
   java_version=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
   if [[ "$java_version" < "21" ]]; then
-    sudo apt update -y && udo apt install openjdk-22-jdk -y
     echo "Java version is less than 21, installing the latest Java version..."
-    sudo apt-get install -y fonts-dejavu  # Ensure dependency is installed
-    curl -L -o openlogic.deb https://builds.openlogic.com/downloadJDK/openlogic-openjdk/22.0.2+9/openlogic-openjdk-22.0.2+9-linux-x64-deb.deb
-    sudo dpkg -i openlogic.deb
-
-    # Find the line number for the 22 version and automatically select it
-    #update-alternatives --config java 
-    sudo update-alternatives --config java
+    sudo apt update -y && sudo apt install openjdk-21-jdk -y
+    if [[ $? -ne 0 ]]; then
+      echo "Default installation failed, proceeding with manual installation of OpenLogic OpenJDK 22..."
+      sudo apt-get install -y fonts-dejavu  # Ensure dependency is installed
+      curl -L -o openlogic.deb https://builds.openlogic.com/downloadJDK/openlogic-openjdk/22.0.2+9/openlogic-openjdk-22.0.2+9-linux-x64-deb.deb
+      sudo dpkg -i openlogic.deb
+      sudo update-alternatives --config java
+    else
+      echo "OpenJDK 21 installed successfully."
+    fi
   else
     echo "Java version 21.0.x or higher is already installed. Good to go!"
   fi
 }
+
 
 
 # Function to run keygen and Burp Suite Pro
