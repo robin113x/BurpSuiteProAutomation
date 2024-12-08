@@ -103,7 +103,7 @@ run_from_anywhere() {
   echo "  /bin/java --add-opens=java.desktop/javax.swing=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED -javaagent:burploader.jar -noverify -jar burpsuite_pro.jar > /dev/null" >> burp
   sudo chmod 777 burp
   sudo mv burp /bin/
-  clear
+  
   
 }
 
@@ -117,8 +117,7 @@ run_from_anywhere
 
 # Here, the user will choose the Java version to be used
 # Prompt the user to select version 22 for Java
-clear
+
 echo "Remember to select version 22 when prompted!"
-sudo update-alternatives --config java
-clear
+#sudo update-alternatives --config java
 echo "Type 'burp' in the terminal to run"
