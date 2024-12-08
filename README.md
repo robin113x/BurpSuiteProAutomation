@@ -1,4 +1,4 @@
-# Burp Suite Pro Automation Script
+# Burp Suite Pro Installer
 ![image](https://github.com/user-attachments/assets/00f296d0-367d-41e7-9190-3268e3b141ca)
 
 
