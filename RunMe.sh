@@ -11,8 +11,6 @@ echo -e "\e[1;31m=================================== \e[0m"
 echo -e "\e[1;32m============ROBIN H00D============= \e[0m" 
 echo -e "\e[1;31m=================================== \e[0m" 
 # Global variables
-LATEST_VERSION=""
-modified=""
 curr_dir=""
 
 # Function to clone the repository
@@ -39,13 +37,11 @@ fetch_latest_version() {
   echo "Fetching the latest Burp Suite Pro version..."
   curl -s https://portswigger.net/burp/releases#professional > Version.txt
   cat Version.txt | grep 'professional-community' | head -n 4 | tail -n 1 > latest_version.txt
-  LATEST_VERSION=$(cat latest_version.txt | grep -o '[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}')
+  LATEST_VERSION=$(cat latest_version.txt | grep -o '[0-9]\{4\}-[0-9]\{1,2\}-[0-9]\{1,2\}')
   modified=$(echo "$LATEST_VERSION" | sed 's/-/./g')
   echo "Latest version: $modified"
-}
 
-# Function to download Burp Suite Pro
-download_burp_suite() {
+  echo "*********************************************************"
   if [ -f "burpsuite_pro.jar" ]; then
     echo "burpsuite_pro.jar already exists. Skipping download."
   else
@@ -63,6 +59,7 @@ download_burp_suite() {
   fi
   sudo chmod 777 *
 }
+
 
 # Function to check if Java version is less than 21.x.x and install if needed
 check_and_install_java() {
@@ -114,7 +111,6 @@ run_from_anywhere() {
 install_git_if_needed
 clone_repo
 fetch_latest_version
-download_burp_suite
 check_and_install_java
 run_burp_suite
 run_from_anywhere
