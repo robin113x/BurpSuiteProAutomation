@@ -26,3 +26,4 @@ This script automates the installation and setup of Burp Suite Pro, ensuring the
 
    ```bash
    curl "https://raw.githubusercontent.com/robin113x/BurpSuiteProAutomation/refs/heads/main/RunMe.sh" | bash
+   ** Register using manual activation **
