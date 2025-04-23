@@ -111,7 +111,7 @@ run_from_anywhere() {
 install_git_if_needed
 clone_repo
 fetch_latest_version
-check_and_install_java
+#check_and_install_java
 run_burp_suite
 run_from_anywhere
 
