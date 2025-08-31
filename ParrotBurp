@@ -1,0 +1,23 @@
+#!/bin/bash
+
+
+ #wget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.deb
+ #chmod 777 jdk-21_linux-x64_bin.deb
+ #sudo dpkg -i jdk-21_linux-x64_bin.deb
+ 
+ 
+# Paths
+JAVA_PATH="/usr/lib/jvm/jdk-21.0.8-oracle-x64/bin/java"
+BURPLOADER="/home/robin/Tools/BurpSuitePro/burploader.jar"
+BURP_JAR="/home/robin/Tools/BurpSuitePro/burpsuite_pro.jar"
+
+# Run BurpSuite with custom javaagent
+"$JAVA_PATH" \
+  --add-opens=java.desktop/javax.swing=ALL-UNNAMED \
+  --add-opens=java.base/java.lang=ALL-UNNAMED \
+  --add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED \
+  --add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED \
+  --add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED \
+  -javaagent:"$BURPLOADER" \
+  -noverify \
+  -jar "$BURP_JAR"
