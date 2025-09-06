@@ -29,3 +29,10 @@ This script automates the installation and setup of Burp Suite Pro, ensuring the
    ```
    ```
    ** Register using manual activation **
+
+2. **Set Icon**
+   ```
+   chmod +x ~/.local/share/applications/burpsuite.desktop
+   update-desktop-database ~/.local/share/applications/
+   ```
+
