@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Burp Suite Professional
+Comment=Web Security Testing Tool
+Exec=/bin/burp
+Icon=/home/blackbox/BurpSuitePro/burp.png
+Terminal=false
+Categories=Development;Security;Utility;
