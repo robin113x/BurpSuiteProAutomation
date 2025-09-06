@@ -32,6 +32,7 @@ This script automates the installation and setup of Burp Suite Pro, ensuring the
 
 2. **Set Icon**
    ```
+   https://icon-icons.com/icon/Burp-Suite-macOS-BigSur/190319
    chmod +x ~/.local/share/applications/burpsuite.desktop
    update-desktop-database ~/.local/share/applications/
    ```
